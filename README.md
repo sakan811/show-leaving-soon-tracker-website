@@ -4,3 +4,4 @@ A Vue.js application that displays Netflix titles leaving the platform soon, fea
 
 ## Accessing the website
 
+<https://netflix-leaving-soon-tracker-website.vercel.app/>
