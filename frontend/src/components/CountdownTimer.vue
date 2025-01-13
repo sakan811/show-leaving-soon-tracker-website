@@ -13,7 +13,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, inject } from 'vue'
 import { parseISO } from 'date-fns'
-import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz'
 
 const props = defineProps({
   date: {
@@ -28,45 +27,63 @@ let timer = null
 
 const getTimeRemaining = (endtime) => {
   try {
-    // Get current time in user's timezone
     const timezone = userTimezone?.value || Intl.DateTimeFormat().resolvedOptions().timeZone
-    const nowUTC = new Date()
+    const now = new Date()
     
-    // Parse target date string to UTC first
+    // Parse target date and create Date object
     const targetDate = parseISO(endtime)
     
-    // Convert target date to user's timezone and set to next day midnight
-    const targetInUserTZ = utcToZonedTime(targetDate, timezone)
-    targetInUserTZ.setHours(0, 0, 0, 0)  // Set to midnight
-    
-    // Convert back to UTC for consistent calculations
-    const targetUTC = zonedTimeToUtc(targetInUserTZ, timezone)
+    // Create formatter for target timezone
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
+    // Format target date in user's timezone
+    const parts = formatter.formatToParts(targetDate)
+    const dateObj = {}
+    parts.forEach(part => {
+      if (part.type !== 'literal') {
+        dateObj[part.type] = part.value
+      }
+    })
+
+    // Create new date at midnight in user's timezone
+    const targetInTZ = new Date(
+      `${dateObj.year}-${dateObj.month}-${dateObj.day}T00:00:00.000${getTimezoneOffset(timezone)}`
+    )
     
     // Calculate total milliseconds remaining
-    const total = targetUTC.getTime() - nowUTC.getTime()
+    const total = targetInTZ.getTime() - now.getTime()
     
-    // Calculate days first
+    // Calculate time components
     const days = Math.max(0, Math.floor(total / (1000 * 60 * 60 * 24)))
-    
-    // Calculate remaining time after removing full days
     const remainingTime = total - (days * 1000 * 60 * 60 * 24)
-    
-    // Calculate hours, minutes, seconds from remaining time
     const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24)
     const minutes = Math.floor((remainingTime / (1000 * 60)) % 60)
     const seconds = Math.floor((remainingTime / 1000) % 60)
 
-    return {
-      total,
-      days,
-      hours,
-      minutes,
-      seconds
-    }
+    return { total, days, hours, minutes, seconds }
   } catch (error) {
     console.error('Error in getTimeRemaining:', error)
     return { total: 0, days: 0, hours: 0, minutes: 0, seconds: 0 }
   }
+}
+
+const getTimezoneOffset = (timezone) => {
+  const date = new Date()
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+  const offset = (tzDate - utcDate) / 60000
+  const hours = Math.floor(Math.abs(offset) / 60)
+  const minutes = Math.abs(offset) % 60
+  return `${offset >= 0 ? '+' : '-'}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
 }
 
 const updateClock = () => {
@@ -79,7 +96,7 @@ const updateClock = () => {
 }
 
 onMounted(() => {
-  updateClock() // Run once immediately
+  updateClock()
   timer = setInterval(updateClock, 1000)
 })
 
