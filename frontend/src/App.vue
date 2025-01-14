@@ -13,7 +13,7 @@
       />
     </div>
     <footer class="footer-reference">
-      Reference: <a href="https://www.netflix.com/tudum" class="tudum-link" target="_blank" rel="noopener noreferrer">Tudum by Netflix</a>
+      Reference: <a href="https://www.movieofthenight.com/catalog/netflix/th/leaving" class="tudum-link" target="_blank" rel="noopener noreferrer">Movie of the Night</a>
     </footer>
   </div>
 </template>
