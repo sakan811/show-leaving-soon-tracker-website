@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-8">
+  <div v-if="hasUpcomingTitles" class="mb-8">
     <h3 class="section-title">{{ formatDate(date) }}</h3>
     <div class="grid-layout">
       <div 
@@ -17,6 +17,7 @@
 <script setup>
 import CountdownTimer from './CountdownTimer.vue'
 import { format } from 'date-fns'
+import { computed } from 'vue'
 
 const props = defineProps({
   date: {
@@ -62,4 +63,9 @@ const formatDate = (dateStr) => {
     return dateStr
   }
 }
+
+const hasUpcomingTitles = computed(() => {
+  const targetDate = new Date(getDateFromString(props.date))
+  return targetDate > new Date()
+})
 </script> 
