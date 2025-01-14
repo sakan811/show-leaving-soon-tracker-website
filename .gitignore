@@ -4,3 +4,4 @@
 **/*.log
 **/*.env
 /frontend/node_modules
+**/*.DS_Store
