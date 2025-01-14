@@ -1,0 +1,38 @@
+---
+title: Scraper Overview
+---
+sequenceDiagram
+    participant Script as main.py
+    participant Scraper as NetflixScraper
+    participant Browser as Selenium Browser
+    participant Netflix as Netflix Tudum
+    participant FileSystem as JSON File
+
+    Script->>Scraper: Initialize with headless=True
+    activate Scraper
+    Scraper->>Browser: Create Chrome instance
+    activate Browser
+
+    Script->>Scraper: get_leaving_dates_and_titles(url)
+    Scraper->>Browser: Navigate to URL
+    Browser->>Netflix: HTTP GET request
+    Netflix-->>Browser: Return HTML page
+    
+    Scraper->>Browser: Wait for article-content
+    Browser-->>Scraper: Content loaded
+    
+    loop For each h3 element
+        Scraper->>Browser: Find heading elements
+        Browser-->>Scraper: Return element
+        Scraper->>Scraper: Parse date/title
+    end
+
+    Script->>Scraper: save_leaving_titles(data, path)
+    Scraper->>Scraper: Format data as dictionary
+    Scraper->>FileSystem: Write JSON file
+    FileSystem-->>Scraper: File saved
+
+    Script->>Scraper: Close (via context manager)
+    Scraper->>Browser: Quit browser
+    deactivate Browser
+    deactivate Scraper
