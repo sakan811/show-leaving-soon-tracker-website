@@ -5,3 +5,9 @@ A Vue.js application that displays Netflix titles leaving the platform soon, fea
 ## Accessing the website
 
 <https://netflix-leaving-soon-tracker-website.vercel.app/>
+
+## Docs
+
+### Sequence Diagrams
+
+[Click here to view the sequence diagrams](./docs/mermaid-charts.md)
