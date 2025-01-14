@@ -1,0 +1,32 @@
+---
+title: Frontend Overview
+---
+sequenceDiagram
+    participant User
+    participant App
+    participant UserLocation
+    participant LeavingTitle
+    participant CountdownTimer
+    participant IPAPI
+    participant DataFile
+
+    User->>App: Visits website
+    
+    App->>DataFile: Fetch leaving_titles_jan_2025.json
+    DataFile-->>App: Return titles data
+    
+    App->>UserLocation: Mount component
+    UserLocation->>IPAPI: Fetch user location/timezone
+    IPAPI-->>UserLocation: Return location data
+    UserLocation-->>App: Update timezone
+    
+    App->>LeavingTitle: Create components for each date
+    
+    loop For each title
+        LeavingTitle->>CountdownTimer: Initialize with date
+        CountdownTimer->>CountdownTimer: Start countdown interval
+        CountdownTimer-->>LeavingTitle: Update time remaining
+    end
+    
+    User->>App: View countdown timers
+    CountdownTimer-->>User: Display real-time updates
