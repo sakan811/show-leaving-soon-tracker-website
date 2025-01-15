@@ -63,4 +63,21 @@
   .no-data-message {
     @apply text-gray-500 italic text-center my-8 text-lg;
   }
+
+  /* New class for CountdownTimer component */
+  .countdown-container {
+    @apply font-mono text-sm text-red-500;
+  }
+
+  .countdown-flex {
+    @apply flex space-x-2;
+  }
+
+  .countdown-digit {
+    @apply bg-red-50 px-2 py-1 rounded mx-1;
+  }
+
+  .countdown-finished {
+    @apply text-gray-400;
+  }
 } 

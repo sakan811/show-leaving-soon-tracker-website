@@ -74,11 +74,13 @@ onMounted(() => {
 
 // Computed property to sort leaving titles by date
 const sortedLeavingTitles = computed(() => {
+  const now = new Date(); // Current date and time
   return Object.keys(leavingTitles.value)
+    .filter(date => new Date(date) > now) // Keep only future dates
     .sort() // Sort the dates
     .reduce((acc, date) => {
-      acc[date] = leavingTitles.value[date] // Ensure this is an array
-      return acc
-    }, {})
-})
+      acc[date] = leavingTitles.value[date]; // Ensure this is an array
+      return acc;
+    }, {});
+});
 </script>
