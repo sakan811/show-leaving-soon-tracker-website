@@ -1,12 +1,12 @@
 <template>
-  <div class="font-mono text-sm text-red-500">
-    <div v-if="timeLeft.total > 0" class="flex space-x-2">
+  <div class="countdown-container">
+    <div v-if="timeLeft.total > 0" class="countdown-flex">
       <span class="countdown-digit">{{ timeLeft.days }}d</span>
       <span class="countdown-digit">{{ ('0' + timeLeft.hours).slice(-2) }}h</span>
       <span class="countdown-digit">{{ ('0' + timeLeft.minutes).slice(-2) }}m</span>
       <span class="countdown-digit">{{ ('0' + timeLeft.seconds).slice(-2) }}s</span>
     </div>
-    <div v-else class="text-gray-400">Already Left</div>
+    <div v-else class="countdown-finished">Already Left</div>
   </div>
 </template>
 
@@ -54,9 +54,9 @@ const getTimeRemaining = (endtime) => {
       }
     })
 
-    // Create new date at midnight in user's timezone
+    // Create new date at 23:59:59 in user's timezone
     const targetInTZ = new Date(
-      `${dateObj.year}-${dateObj.month}-${dateObj.day}T00:00:00.000${getTimezoneOffset(timezone)}`
+      `${dateObj.year}-${dateObj.month}-${dateObj.day}T23:59:59.000${getTimezoneOffset(timezone)}`
     )
     
     // Calculate total milliseconds remaining
