@@ -1,90 +1,79 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import requests
 import logging
 import json
 import os
+import datetime
 
-class NetflixScraper:
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class StreamingAvailabilityScraper:
     """
-    A class to scrape movie information from Netflix
-    
-    Attributes:
-        driver: Selenium WebDriver instance
+    A class to scrape leaving titles information from Streaming Availability API
     """
     
-    def __init__(self, headless: bool = True):
+    def __init__(self):
         """
-        Initialize the Netflix scraper
-        
-        Args:
-            headless: Whether to run browser in headless mode
+        Initialize the Streaming Availability scraper
         """
-        options = webdriver.ChromeOptions()
-        if headless:
-            options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        
-        self.driver = webdriver.Chrome(options=options)
-        
+
         # Setup logging
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
+
+    def __enter__(self):
+        # Return the instance itself when entering the context
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Handle cleanup if necessary (currently, there's nothing to clean up)
+        pass
     
-    def get_leaving_dates_and_titles(self, url):
+    def get_leaving_titles(self):
         """
-        Gets all leaving dates and their corresponding show titles from Netflix Tudum page.
-        
-        Args:
-            url (str): The URL of the Netflix Tudum leaving soon page
+        Gets all leaving dates and their corresponding show titles from Streaming Availability API.
             
         Returns:
             list: List of tuples containing leaving date and corresponding show titles
         """
-        self.driver.get(url)
-        
-        # Wait for the content to load
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-sel='article-content']"))
-        )
-        
         try:
-            # Find all h3 elements within article-content
-            content = self.driver.find_elements(
-                By.CSS_SELECTOR, 
-                "div[data-sel='article-content'] h3[data-sel='heading']"
-            )
+            url = "https://streaming-availability.p.rapidapi.com/leaving"
             
-            leaving_data = []
-            current_date = None
+            querystring = {"output_language":"en","target_type":"show","services":"netflix","country":"th"}
+
+            headers = {
+                "x-rapidapi-key": os.getenv("API_KEY"),
+                "x-rapidapi-host": "streaming-availability.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=headers, params=querystring)
+            response.raise_for_status()
+            data = response.json()
             
-            for element in content:
-                if 'css-1i31ble' in element.get_attribute('class'):
-                    # This is a leaving date
-                    current_date = element.text.strip()
-                elif 'css-4maxu3' in element.get_attribute('class'):
-                    # This is a show title
-                    if current_date:
-                        leaving_data.append((current_date, element.text.strip()))
+            leaving_titles = []
+            for item in data.get('result', []):
+                show = item.get('show', {})
+                title = show.get('title')
+                
+                # Get streaming info for Thailand (th) region
+                streaming_info = show.get('streamingInfo', {}).get('th', [])
+                for info in streaming_info:
+                    if info.get('service') == 'netflix' and 'leaving' in info:
+                        leaving_date = info['leaving']
+                        
+                        # Convert timestamp to formatted date
+                        date_time = datetime.datetime.fromtimestamp(leaving_date)
+                        formatted_date = date_time.strftime('%Y-%m-%d')
+                        
+                        leaving_titles.append((formatted_date, title))
             
-            return leaving_data
+            self.logger.info(f"Successfully retrieved {len(leaving_titles)} leaving titles")
+            return leaving_titles
             
         except Exception as e:
-            self.logger.error(f"Error finding leaving dates and titles: {str(e)}")
+            self.logger.error(f"Error getting leaving titles from the API: {str(e)}")
             return []
-
-    def close(self):
-        """Close the browser and cleanup"""
-        if self.driver:
-            self.driver.quit()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
 
     def save_leaving_titles(self, leaving_data, output_path):
         """
