@@ -11,21 +11,31 @@ sequenceDiagram
 
     User->>App: Visits website
     
-    App->>DataFile: Fetch leaving_titles_jan_2025.json
+    App->>App: Initialize with default service (Netflix)
+    
+    User->>App: Select streaming service
+    User->>App: Select country
+    
+    App->>DataFile: Fetch leaving_titles_{country}_{service}.json
     DataFile-->>App: Return titles data
     
-    App->>App: Sort titles by date
-    
-    App->>UserLocation: Mount component
-    UserLocation-->>App: Get browser timezone
-    
-    App->>LeavingTitle: Create components for each date
-    
-    loop For each title
-        LeavingTitle->>CountdownTimer: Initialize with date
-        CountdownTimer->>CountdownTimer: Calculate timezone offset
-        CountdownTimer->>CountdownTimer: Start countdown interval
-        CountdownTimer-->>LeavingTitle: Update time remaining
+    alt No titles available
+        App->>User: Display "No leaving titles" message
+    else Has titles
+        App->>App: Sort titles by date
+        
+        App->>UserLocation: Mount component
+        UserLocation-->>App: Get browser timezone
+        
+        App->>LeavingTitle: Create components for each date
+        
+        loop For each title
+            LeavingTitle->>LeavingTitle: Filter duplicate titles
+            LeavingTitle->>CountdownTimer: Initialize with date
+            CountdownTimer->>CountdownTimer: Calculate timezone offset
+            CountdownTimer->>CountdownTimer: Start countdown interval
+            CountdownTimer-->>LeavingTitle: Update time remaining
+        end
     end
     
     User->>App: View countdown timers

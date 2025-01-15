@@ -10,17 +10,19 @@ sequenceDiagram
     Script->>Scraper: Initialize scraper
     activate Scraper
     
-    Script->>Scraper: get_leaving_titles()
-    Scraper->>API: HTTP GET /leaving
-    API-->>Scraper: Return JSON response
-    
-    loop For each show
-        Scraper->>Scraper: Extract title and date
-        Scraper->>Scraper: Convert timestamp to YYYY-MM-DD
-    end
+    loop For each service and country
+        Script->>Scraper: get_leaving_titles(country, service)
+        Scraper->>API: HTTP GET /leaving
+        API-->>Scraper: Return JSON response
+        
+        loop For each show
+            Scraper->>Scraper: Extract title and date
+            Scraper->>Scraper: Convert timestamp to YYYY-MM-DD
+        end
 
-    Script->>Scraper: save_leaving_titles(data, path)
-    Scraper->>Scraper: Format data as dictionary
-    Scraper->>FileSystem: Write JSON file
-    FileSystem-->>Scraper: File saved
+        Script->>Scraper: save_leaving_titles(data, path)
+        Scraper->>Scraper: Format data as dictionary
+        Scraper->>FileSystem: Write JSON file as leaving_titles_{country}_{service}.json
+        FileSystem-->>Scraper: File saved
+    end
     deactivate Scraper
