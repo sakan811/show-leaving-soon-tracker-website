@@ -4,7 +4,7 @@ A Vue.js application that displays shows leaving the platform soon, featuring a 
 
 ## Status
 
-[![Frontend Tests](https://github.com/show-leaving-soon-tracker/show-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/show-leaving-soon-tracker/show-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml)
+[![Frontend Tests](https://github.com/sakan811/netflix-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/sakan811/netflix-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml)
 
 ## Accessing the website
 
