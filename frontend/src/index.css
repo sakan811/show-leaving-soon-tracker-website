@@ -48,7 +48,19 @@
     @apply text-center text-sm text-gray-600 mt-12 pb-4;
   }
 
-  .tudum-link {
+  .ref-link {
     @apply text-netflix-red hover:underline;
+  }
+
+  .dropdown-select {
+    @apply border rounded p-2;
+  }
+
+  .dropdown-container {
+    @apply flex space-x-4 mb-4;
+  }
+  
+  .no-data-message {
+    @apply text-gray-500 italic text-center my-8 text-lg;
   }
 } 
