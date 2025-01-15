@@ -1,4 +1,4 @@
-from netflix_scraper import StreamingAvailabilityScraper
+from service.leaving_show_scraper import StreamingAvailabilityScraper
 import sys
 import os
 
