@@ -7,7 +7,6 @@ sequenceDiagram
     participant UserLocation
     participant LeavingTitle
     participant CountdownTimer
-    participant IPAPI
     participant DataFile
 
     User->>App: Visits website
@@ -15,15 +14,16 @@ sequenceDiagram
     App->>DataFile: Fetch leaving_titles_jan_2025.json
     DataFile-->>App: Return titles data
     
+    App->>App: Sort titles by date
+    
     App->>UserLocation: Mount component
-    UserLocation->>IPAPI: Fetch user location/timezone
-    IPAPI-->>UserLocation: Return location data
-    UserLocation-->>App: Update timezone
+    UserLocation-->>App: Get browser timezone
     
     App->>LeavingTitle: Create components for each date
     
     loop For each title
         LeavingTitle->>CountdownTimer: Initialize with date
+        CountdownTimer->>CountdownTimer: Calculate timezone offset
         CountdownTimer->>CountdownTimer: Start countdown interval
         CountdownTimer-->>LeavingTitle: Update time remaining
     end
