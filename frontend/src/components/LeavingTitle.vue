@@ -3,8 +3,8 @@
     <h3 class="section-title">{{ formatDate(date) }}</h3>
     <div class="grid-layout">
       <div 
-        v-for="title in titles" 
-        :key="title" 
+        v-for="title in uniqueTitles" 
+        :key="`${title}-${date}`"
         class="card"
       >
         <span class="text-netflix-black mr-4">{{ title }}</span>
@@ -42,5 +42,10 @@ const formatDate = (dateStr) => {
 const hasUpcomingTitles = computed(() => {
   const targetDate = new Date(props.date)
   return targetDate > new Date()
+})
+
+// Computed property to filter out duplicate titles
+const uniqueTitles = computed(() => {
+  return [...new Set(props.titles)]
 })
 </script> 
