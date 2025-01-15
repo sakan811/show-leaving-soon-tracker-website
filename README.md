@@ -2,6 +2,10 @@
 
 A Vue.js application that displays shows leaving the platform soon, featuring a countdown timer for each show based on the user's local timezone.
 
+## Status
+
+[![Frontend Tests](https://github.com/show-leaving-soon-tracker/show-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/show-leaving-soon-tracker/show-leaving-soon-tracker-website/actions/workflows/frontend-tests.yml)
+
 ## Accessing the website
 
 <https://show-leaving-soon-tracker-website.vercel.app/>
