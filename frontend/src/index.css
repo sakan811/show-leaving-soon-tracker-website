@@ -1,83 +1,159 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer components {
   .container-default {
-    @apply max-w-4xl mx-auto px-4 py-8;
+    max-width: 56rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
   
   .title-primary {
-    @apply text-3xl font-bold text-netflix-red text-center mb-8;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: var(--netflix-red);
+    text-align: center;
+    margin-bottom: 2rem;
   }
   
   .grid-layout {
-    @apply grid gap-8;
+    display: grid;
+    gap: 2rem;
   }
   
   .card {
-    @apply flex justify-between items-center p-4 bg-white/50 rounded-lg shadow-sm hover:shadow-md transition-shadow;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition-property: box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  
+  .card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   
   .countdown-digit {
-    @apply bg-red-50 px-2 py-1 rounded mx-1;
+    background-color: rgb(254, 242, 242);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 0.25rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
   }
   
   .section-title {
-    @apply text-xl font-semibold mb-4 text-netflix-black;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--netflix-black);
   }
 
   /* New classes for UserLocation component */
   .location-container {
-    @apply flex flex-col sm:flex-row justify-between items-center w-full;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  @media (min-width: 640px) {
+    .location-container {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   .location-item {
-    @apply flex items-center space-x-2;
+    display: flex;
+    align-items: center;
+  }
+  
+  .location-item > * + * {
+    margin-left: 0.5rem;
   }
 
   .location-icon {
-    @apply w-5 h-5 text-gray-500;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgb(107, 114, 128);
   }
 
   .location-text {
-    @apply text-gray-700;
+    color: rgb(55, 65, 81);
   }
 
   .footer-reference {
-    @apply text-center text-sm text-gray-600 mt-12 pb-4;
+    text-align: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(75, 85, 99);
+    margin-top: 3rem;
+    padding-bottom: 1rem;
   }
 
   .ref-link {
-    @apply text-netflix-red hover:underline;
+    color: var(--netflix-red);
+  }
+  
+  .ref-link:hover {
+    text-decoration: underline;
   }
 
   .dropdown-select {
-    @apply border rounded p-2;
+    border-width: 1px;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
   }
 
   .dropdown-container {
-    @apply flex space-x-4 mb-4;
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  
+  .dropdown-container > * + * {
+    margin-left: 1rem;
   }
   
   .no-data-message {
-    @apply text-gray-500 italic text-center my-8 text-lg;
+    color: rgb(107, 114, 128);
+    font-style: italic;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 
   /* New class for CountdownTimer component */
   .countdown-container {
-    @apply font-mono text-sm text-red-500;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(239, 68, 68);
   }
 
   .countdown-flex {
-    @apply flex space-x-2;
+    display: flex;
   }
-
-  .countdown-digit {
-    @apply bg-red-50 px-2 py-1 rounded mx-1;
+  
+  .countdown-flex > * + * {
+    margin-left: 0.5rem;
   }
 
   .countdown-finished {
-    @apply text-gray-400;
+    color: rgb(156, 163, 175);
   }
 } 
